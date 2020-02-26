@@ -34,6 +34,9 @@ read choice
 
 #DICTIONARIES
 declare -A singletCount
+declare -A doubletCount
+declare -A tripletCount
+declare -A sortResult
 
 #FUNCTION TO FLIP A COIN
 function flipCoin()
@@ -47,6 +50,7 @@ function flipCoin()
    fi
 	echo $value
 }
+
 #FLIP THE COIN TILL THE ITERATION IS EQUAL TO ZERO
 case $choice in
 	1)
@@ -68,7 +72,9 @@ case $choice in
    	fi
 	done
 	headPercent=`echo "scale=3; $headCount/$count*100" | bc -l`
+	sortResult["H"]="$headCount"
 	tailPercent=`echo "scale=3; $tailCount/$count*100" | bc -l`
+	sortResult["T"]="$tailCount"
 	;;
 
 	2)
@@ -100,9 +106,13 @@ case $choice in
    	doubleCount=$((doubleCount+1))
 	done
 	hhPercent=`echo "scale=3; $hhCount/$doubleCount*100" | bc -l`
+	sortResult["HH"]="$hhCount"
 	htPercent=`echo "scale=3; $htCount/$doubleCount*100" | bc -l`
+	sortResult["HT"]="$htCount"
 	ttPercent=`echo "scale=3; $ttCount/$doubleCount*100" | bc -l`
+	sortResult["TT"]="$ttCount"
 	thPercent=`echo "scale=3; $thCount/$doubleCount*100" | bc -l`
+	sortResult["TH"]="$thCount"
 	;;
 
 	3)
@@ -143,17 +153,29 @@ case $choice in
       fi
       trippleCount=$((trippleCount+1))
    done
-   hhhPercent=`echo "scale=3; $hhhCount/$trippleCount*100" | bc -l`
-	hhtPercent=`echo "scale=3; $hhtCount/$trippleCount*100" | bc -l`
-	hthPercent=`echo "scale=3; $hthCount/$trippleCount*100" | bc -l`
-	thhPercent=`echo "scale=3; $thhCount/$trippleCount*100" | bc -l`
-	tttPercent=`echo "scale=3; $tttCount/$trippleCount*100" | bc -l`
-	tttPercent=`echo "scale=3; $tttCount/$trippleCount*100" | bc -l`
-	tthPercent=`echo "scale=3; $tthCount/$trippleCount*100" | bc -l`
-	thtPercent=`echo "scale=3; $thtCount/$trippleCount*100" | bc -l`
-	httPercent=`echo "scale=3; $httCount/$trippleCount*100" | bc -l`
-	;;
 	
+   hhhPercent=`echo "scale=3; $hhhCount/$trippleCount*100" | bc -l`
+	sortResult["HHH"]="$hhhCount"
+	hhtPercent=`echo "scale=3; $hhtCount/$trippleCount*100" | bc -l`
+	sortResult["HHT"]="$hhtCount"
+	hthPercent=`echo "scale=3; $hthCount/$trippleCount*100" | bc -l`
+	sortResult["HTH"]="$hthCount"
+	thhPercent=`echo "scale=3; $thhCount/$trippleCount*100" | bc -l`
+	sortResult["THH"]="$thhCount"
+	tttPercent=`echo "scale=3; $tttCount/$trippleCount*100" | bc -l`
+	sortResult["TTT"]="$tttCount"
+	tthPercent=`echo "scale=3; $tthCount/$trippleCount*100" | bc -l`
+	sortResult["TTH"]="$tthCount"
+	thtPercent=`echo "scale=3; $thtCount/$trippleCount*100" | bc -l`
+	sortResult["THT"]="$thtCount"
+	httPercent=`echo "scale=3; $httCount/$trippleCount*100" | bc -l`
+	sortResult["HTT"]="$httCount"
+	;;
 	*)
 	printf "Invalid input..\n"
 esac
+for value in ${!sortResult[@]}
+do
+	echo "$value : ${sortResult[$value]}"
+done |
+sort -rn -k3
